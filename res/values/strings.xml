@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Remember?</string>
+    <string name="dummy_content">Shake for\nRandom Morse\nCode Letters</string>
+    <string name="dummy_button">Vibe Letter</string>
+    <string name="vibe_letter">Play Letter</string>
+
+</resources>
