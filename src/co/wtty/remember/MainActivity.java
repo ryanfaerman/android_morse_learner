@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,6 +21,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -257,6 +261,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 		});
 		
 	}
+	
+	public void thing() {
+		snd.play(_letter_sounds[_current_letter]);
+	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -341,5 +349,33 @@ public class MainActivity extends Activity implements SensorEventListener {
 		      last_z = z;
 		    }
 		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main_menu, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.i("TRACE", "doing something dumb");
+		Log.i("TRACE", String.valueOf(item.getItemId()));
+		switch (item.getItemId()) {
+	        case R.id.menu_random:
+	            // app icon in action bar clicked; go home
+	        	_current_letter = _rng.nextInt(26);
+		        String display = alphabet[_current_letter] + "\n" + morse_alphabet[_current_letter];
+		        ((TextView) contentView).setText(display);
+	            return true;
+	        case R.id.menu_about:
+	        	Intent intent = new Intent(this, AboutActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(intent);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 }
