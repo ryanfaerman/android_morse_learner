@@ -4,8 +4,6 @@
 </head>
 <body>
 
-<h1>Text-to-Morse</h1>
-
 <form id="morseable">
   <input type="text" name="word" id="word" placeholder="Enter Word" />
   <input type="submit" value="Play"/>
@@ -33,7 +31,11 @@ if (typeof Native !== "undefined" && Native !== null) {
 }
 
 $('#morseable').on('submit', function(e){
-  console.log('hello there');
+  word = $('#word')[0].value || ""
+  if(word != "") {
+    _.playMorse(word);
+    $('#word')[0].value = '';
+  }
   e.preventDefault();
 });
 </script>

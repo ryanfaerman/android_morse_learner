@@ -3,6 +3,7 @@
     <issue id="HardcodedText">
         <ignore path="res/layout/activity_main.xml" />
     </issue>
+    <issue id="SetJavaScriptEnabled" severity="ignore" />
     <issue id="TypographyEllipsis">
         <ignore path="res/values/strings.xml" />
     </issue>

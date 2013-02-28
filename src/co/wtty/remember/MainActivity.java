@@ -1,7 +1,10 @@
 package co.wtty.remember;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
+import co.wtty.remember.PlayerActivity.Gonzo;
 import co.wtty.remember.util.SystemUiHider;
 
 import android.annotation.TargetApi;
@@ -26,6 +29,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +58,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	 * If set, will toggle the system UI visibility upon interaction. Otherwise,
 	 * will show the system UI visibility upon interaction.
 	 */
-	private static final boolean TOGGLE_ON_CLICK = true;
+	private static final boolean TOGGLE_ON_CLICK = false;
 
 	/**
 	 * The flags to pass to {@link SystemUiHider#getInstance}.
@@ -77,6 +83,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	int short_gap = 200;    // Length of Gap Between dots/dashes
 	int medium_gap = 500;   // Length of Gap Between Letters
 	int long_gap = 1000;    // Length of Gap Between Words
+	WebView _webview;
 	String[] alphabet = {
 			"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", 
 			"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
@@ -99,12 +106,18 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
 		contentView = findViewById(R.id.fullscreen_content);
+		
+		_webview = (WebView) findViewById(R.id.the_webview);
+		WebSettings webSettings = _webview.getSettings();
+		webSettings.setJavaScriptEnabled(true);
+		_webview.loadUrl("file:///android_asset/index.html");
+		_webview.addJavascriptInterface(new Gonzo(), "Native");
 
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
 		mSystemUiHider = SystemUiHider.getInstance(this, contentView,
 				HIDER_FLAGS);
-		mSystemUiHider.setup();
+		//mSystemUiHider.setup();
 		mSystemUiHider
 				.setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
 					// Cached values.
@@ -150,18 +163,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 			@Override
 			public void onClick(View view) {
 				if (TOGGLE_ON_CLICK) {
-					mSystemUiHider.toggle();
+					//mSystemUiHider.toggle();
+					mSystemUiHider.show();
 				} else {
 					mSystemUiHider.show();
 				}
 			}
 		});
-
+		mSystemUiHider.show();
 		// Upon interacting with UI controls, delay any scheduled hide()
 		// operations to prevent the jarring behavior of controls going away
 		// while interacting with the UI.
-		findViewById(R.id.dummy_button).setOnTouchListener(
-				mDelayHideTouchListener);
+		//findViewById(R.id.dummy_button).setOnTouchListener(
+		//		mDelayHideTouchListener);
 		
 		_sensorMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
 		_accelerometer = _sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -358,24 +372,53 @@ public class MainActivity extends Activity implements SensorEventListener {
 	    return true;
 	}
 	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i("TRACE", "doing something dumb");
-		Log.i("TRACE", String.valueOf(item.getItemId()));
-		switch (item.getItemId()) {
-	        case R.id.menu_random:
-	            // app icon in action bar clicked; go home
-	        	_current_letter = _rng.nextInt(26);
-		        String display = alphabet[_current_letter] + "\n" + morse_alphabet[_current_letter];
-		        ((TextView) contentView).setText(display);
-	            return true;
-	        case R.id.menu_about:
-	        	Intent intent = new Intent(this, AboutActivity.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+	
+	public static HashMap<String, Integer> _map = new HashMap<String, Integer>(){{
+			put("a", 0);
+			put("b", 1);
+			put("c", 2);
+			put("d", 3);
+			put("e", 4);
+			put("f", 5);
+			put("g", 6);
+			put("h", 7);
+			put("i", 8);
+			put("j", 9);
+			put("k", 10);
+			put("l", 11);
+			put("m", 12);
+			put("n", 13);
+			put("o", 14);
+			put("p", 15);
+			put("q", 16);
+			put("r", 17);
+			put("s", 18);
+			put("t", 19);
+			put("u", 20);
+			put("v", 21);
+			put("w", 22);
+			put("x", 23);
+			put("y", 24);
+			put("z", 25);
+		}};
+	class Gonzo {
+		@JavascriptInterface
+		public void playMorse(String word) {
+			for(int i = 0; i < word.length(); i++) {
+				char letter = word.charAt(i);
+				if(Character.isLetter(letter)) {
+					Log.i("TRACE", String.valueOf(letter));
+					int letterCode = _map.get(String.valueOf(letter));
+					int letterSound = _letter_sounds[letterCode];
+					snd.play(letterSound);
+					try {
+					Thread.sleep(2000);
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+				}
+			}
+			Log.i("GONZO", "BIRD BIRD BIRD, THE "+word+" IS THE WORD");
+		}
 	}
 }

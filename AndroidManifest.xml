@@ -32,16 +32,7 @@
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme" >
             </activity>
-        <receiver android:name="WidgetActivity" >
-            <intent-filter >
-                <action 
-                    android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/daily_letter" />
-        </receiver>
+        
            
     </application>
 

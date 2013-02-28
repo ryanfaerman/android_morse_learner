@@ -6,7 +6,7 @@
     <string name="dummy_button">Vibe Letter</string>
     <string name="vibe_letter">Play Letter</string>
     <string name="menu_random">Randomize letter</string>
-    <string name="menu_about">About The Developer</string>
+    <string name="menu_player">Text-to-Morse</string>
     <string name="morse_letter_content">S\n...</string>
     <string name="play_button">Play Tones</string>
     <string name="about_content">
