@@ -1,0 +1,42 @@
+<html>
+<head>
+
+</head>
+<body>
+
+<h1>Text-to-Morse</h1>
+
+<form id="morseable">
+  <input type="text" name="word" id="word" placeholder="Enter Word" />
+  <input type="submit" value="Play"/>
+</form>
+
+
+<script type="text/javascript">
+var $ = function(selector) {
+  return document.querySelectorAll(selector)
+}
+
+NodeList.prototype.on = function(eventName, cb) {
+  iterator = function(item) {
+    item.addEventListener(eventName, cb, true);
+  }
+  for (var i = 0, l = this.length; i < l; i++) {
+    if (iterator.call(this, this[i], i, this) === {}) return;
+  }
+}
+
+var _;
+
+if (typeof Native !== "undefined" && Native !== null) {
+  _ = Native;
+}
+
+$('#morseable').on('submit', function(e){
+  console.log('hello there');
+  e.preventDefault();
+});
+</script>
+</body>
+</html>
+
